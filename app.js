@@ -7,7 +7,8 @@ class Chat {
             text: 'Ala ma kota',
             name: 'Mateusz Rostkowski',
             email: 'mateusz.rostkowsky995@gmail.com',
-            image: ''
+            image: '',
+            date: '21 jan'
         }]
 
         this.newMessageText = ''
@@ -16,7 +17,6 @@ class Chat {
     }
 
     render() {
-
         // removing all items
         this.chatContainer.innerHTML = ''
 
@@ -37,6 +37,7 @@ class Chat {
         const textContainer = document.createElement('div')
         const nameContainer = document.createElement('h5')
         const messageTextContainer = document.createElement('div')
+        const todayDate = document.createElement('div')
         const image = document.createElement('img')
 
         // add CSS
@@ -93,6 +94,30 @@ class Chat {
         // add attributes and texts on button and input
         input.setAttribute('placeholder', 'Message text')
         button.innerText = 'Send message'
+
+        // event listeners
+        input.addEventListener(
+            'input',
+            (e) => {
+                this.newMessageText = e.target.value
+            }
+        )
+
+        button.addEventListener(
+            `click`,
+            () => {
+                this.messages = this.messages.concat({
+                    text: this.newMessageText,
+                    name: 'Mateusz Rostkowski',
+                    email: 'mateusz.rostkowsky995@gmail.com',
+                    image: ''
+                })
+                this.newMessageText = ''
+
+                this.render()
+            }
+        )
+
 
         // put it all together
         inputGroupForButton.appendChild(button)
