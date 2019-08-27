@@ -3,17 +3,23 @@ class Chat {
     constructor(selector){
         this.chatContainer = document.querySelector('selector') || document.body
         this.user = "null"
-        this.messages = [{
-            text: 'Ala ma kota',
-            name: 'Mateusz Rostkowski',
-            email: 'mateusz.rostkowsky995@gmail.com',
-            image: '',
-            today: '21 jan'
-        }]
+        this.messages = []
 
         this.newMessageText = ''
+        this.render()
+        this.startMessagesSync();
 
         this.render()
+    }
+
+    startMessagesSync(){
+        firebase.database().ref('/messages')
+            .on(
+                'value',
+                (snapshot) => {
+                    this.messages = Object.values(snapshot.val())
+                }
+            )
     }
 
     render() {
@@ -64,8 +70,6 @@ class Chat {
             align-self: center;
 
         `
-
-
         messageContainer.className = 'message-container'
         textContainer.className = 'text-container'
         todayDate.className = 'todayDate'
@@ -117,7 +121,7 @@ class Chat {
 
 
         const options = { month: 'short' };
-        console.log(thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate));
+
 
         // event listeners
         input.addEventListener(
@@ -130,13 +134,16 @@ class Chat {
         button.addEventListener(
             `click`,
             () => {
-                this.messages = this.messages.concat({
-                    text: this.newMessageText,
-                    name: 'Mateusz Rostkowski',
-                    email: 'mateusz.rostkowsky995@gmail.com',
-                    image: '',
-                    today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
-                })
+                firebase.database().ref('/messages')
+                    .push({
+                        text: this.newMessageText,
+                        name: 'Mateusz Rostkowski',
+                        email: 'mateusz.rostkowsky995@gmail.com',
+                        image: '',
+                        today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
+
+                    })
+
                 this.newMessageText = ''
 
                 this.render()
@@ -201,12 +208,3 @@ class Chat {
 
 new Chat()
 
-
-let thisDate = new Date();
-let month = thisDate.getMonth();
-
-let thisDay = thisDate.getDate();
-
-
-const options = { month: 'short' };
-console.log(thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate));
