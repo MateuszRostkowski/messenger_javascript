@@ -8,7 +8,7 @@ class Chat {
             name: 'Mateusz Rostkowski',
             email: 'mateusz.rostkowsky995@gmail.com',
             image: '',
-            date: '21 jan'
+            today: '21 jan'
         }]
 
         this.newMessageText = ''
@@ -46,27 +46,42 @@ class Chat {
             height: 100px;
             border-radius: 50%;
         `
-        messageContainer.style.cssText = `
-            padding: 20px;
-            border-bottom: 1px solid rgba(0,0,0, .125);
-            display: flex;
-            flex-direction: row;
+        // messageContainer.style.cssText = `
+        //     padding: 20px;
+        //     border-bottom: 1px solid rgba(0,0,0, .125);
+        //     display: grid;
+        //     grid-template-columns: 110px 1fr 110px;
+        // `
+        // textContainer.style.cssText = `
+        //     margin: 0 20px;
+        //     align-self: center;
+        //     width: 100%;
+        //     max-width: 70vw;
+        //     overflow-wrap: break-word;
+        // `
+        todayDate.style.cssText = `
+            float: left;
+            align-self: center;
+
         `
-        textContainer.style.cssText = `
-            margin: 0 20px;
-        `
+
+
         messageContainer.className = 'message-container'
+        textContainer.className = 'text-container'
+        todayDate.className = 'todayDate'
 
         // add atributes and texts
         image.setAttribute('src', message.image || `https://api.adorable.io/avatars/100/${message.email}`)
         nameContainer.innerText = message.name
         messageTextContainer.innerText = message.text
+        todayDate.innerText = message.today
 
         // put it all together
         textContainer.appendChild(nameContainer)
         textContainer.appendChild(messageTextContainer)
         messageContainer.appendChild(image)
         messageContainer.appendChild(textContainer)
+        messageContainer.appendChild(todayDate)
         this.chatContainer.appendChild(messageContainer)
 
     }
@@ -95,6 +110,15 @@ class Chat {
         input.setAttribute('placeholder', 'Message text')
         button.innerText = 'Send message'
 
+        let thisDate = new Date();
+        let month = thisDate.getMonth();
+
+        let thisDay = thisDate.getDate();
+
+
+        const options = { month: 'short' };
+        console.log(thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate));
+
         // event listeners
         input.addEventListener(
             'input',
@@ -110,7 +134,8 @@ class Chat {
                     text: this.newMessageText,
                     name: 'Mateusz Rostkowski',
                     email: 'mateusz.rostkowsky995@gmail.com',
-                    image: ''
+                    image: '',
+                    today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
                 })
                 this.newMessageText = ''
 
@@ -175,3 +200,13 @@ class Chat {
 }
 
 new Chat()
+
+
+let thisDate = new Date();
+let month = thisDate.getMonth();
+
+let thisDay = thisDate.getDate();
+
+
+const options = { month: 'short' };
+console.log(thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate));

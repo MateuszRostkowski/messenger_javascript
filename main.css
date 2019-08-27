@@ -1,3 +1,41 @@
 body {
     font-family: 'Poppins', sans-serif;
 }
+
+.message-container {
+    display: grid;
+    grid-template-columns: 110px 1fr 110px;
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+
+}
+
+.text-container {
+    margin: 0 20px;
+    align-self: center;
+    width: 100%;
+    max-width: 70vw;
+    overflow-wrap: break-word;
+}
+
+.todayDate {
+    align-self: center;
+    justify-self: end;
+}
+
+@media (max-width: 1000px) {
+    .text-container {
+        max-width: 60vw;
+    }
+
+    .message-container {
+        grid-template-columns: 110px 1fr 60px;
+
+    }
+}
+
+@media (max-width: 750px) {
+    .text-container {
+        max-width: 40vw;
+    }
+}
