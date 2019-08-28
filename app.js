@@ -2,14 +2,27 @@ class Chat {
 
     constructor(selector){
         this.chatContainer = document.querySelector('selector') || document.body
-        this.user = "null"
+        this.user = null
         this.messages = []
 
         this.newMessageText = ''
         this.render()
         this.startMessagesSync();
+        this.startAuthListening();
 
         this.render()
+    }
+
+    logInByGoogleHandler(){
+        firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        this.render()
+    }
+
+    startAuthListening(){
+        firebase.auth().onAuthStateChanged((user) =>{
+            this.user = user
+            this.render();
+        })
     }
 
     startMessagesSync(){
@@ -32,6 +45,10 @@ class Chat {
         // adding new messages from this.message class field
         this.messages.forEach(message => this.makeMessage(message))
 
+        // adding margin to last message
+        const lastMessage = document.querySelector('.message-container:last-of-type')
+        if (lastMessage) lastMessage.style.marginBottom = '79px'
+
         // displaying login form when not logged in
         if(!this.user) this.makeLoginBox()
 
@@ -52,19 +69,6 @@ class Chat {
             height: 100px;
             border-radius: 50%;
         `
-        // messageContainer.style.cssText = `
-        //     padding: 20px;
-        //     border-bottom: 1px solid rgba(0,0,0, .125);
-        //     display: grid;
-        //     grid-template-columns: 110px 1fr 110px;
-        // `
-        // textContainer.style.cssText = `
-        //     margin: 0 20px;
-        //     align-self: center;
-        //     width: 100%;
-        //     max-width: 70vw;
-        //     overflow-wrap: break-word;
-        // `
         todayDate.style.cssText = `
             float: left;
             align-self: center;
@@ -137,18 +141,21 @@ class Chat {
                 firebase.database().ref('/messages')
                     .push({
                         text: this.newMessageText,
-                        name: 'Mateusz Rostkowski',
-                        email: 'mateusz.rostkowsky995@gmail.com',
-                        image: '',
+                        name: this.user.displayName,
+                        email: this.user.email,
+                        image: this.user.photoURL,
                         today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
-
                     })
 
                 this.newMessageText = ''
 
                 this.render()
+
+                window.scrollTo(0, document.body.scrollHeight);
             }
         )
+
+
 
 
         // put it all together
@@ -190,6 +197,12 @@ class Chat {
         // add texts to elements
         button.innerText = 'Login by Google!'
         header.innerHTML = 'Messenger by <a href="https://github.com/MateuszRostkowski" target="_blank">MateuszRostkowski</a>'
+
+        // add event listeners
+        button.addEventListener(
+            'click',
+            () => this.logInByGoogleHandler()
+        )
 
         // put it all together
         container.appendChild(header)
