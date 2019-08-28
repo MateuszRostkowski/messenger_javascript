@@ -15,7 +15,6 @@ class Chat {
 
     logInByGoogleHandler(){
         firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        this.render()
     }
 
     startAuthListening(){
