@@ -1,37 +1,54 @@
 class Chat {
 
-    constructor(selector){
+    constructor(selector) {
         this.chatContainer = document.querySelector('selector') || document.body
         this.user = null
         this.messages = []
-
         this.newMessageText = ''
-        this.render()
-        this.startMessagesSync();
-        this.startAuthListening();
 
+        this.startListeningForAuthorization()
+        this.startListeningForMessages()
         this.render()
     }
 
-    logInByGoogleHandler(){
-        firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-    }
-
-    startAuthListening(){
-        firebase.auth().onAuthStateChanged((user) =>{
+    startListeningForAuthorization() {
+        firebase.auth().onAuthStateChanged(user => {
             this.user = user
-            this.render();
+            this.render()
         })
     }
 
-    startMessagesSync(){
-        firebase.database().ref('/messages')
-            .on(
-                'value',
-                (snapshot) => {
-                    this.messages = Object.values(snapshot.val())
-                }
-            )
+    startListeningForMessages() {
+        firebase.database().ref('/messages').on(
+            'value',
+            (snapshot) => {
+                this.messages = Object.values(snapshot.val())
+                this.render()
+            }
+        )
+    }
+
+    onLoginByGoogleClickHandler() {
+        firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    }
+
+    newMessageHandler(event) {
+        this.newMessageText = event.target.value
+    }
+
+    addMessageHandler() {
+        const newMessage = {
+            text: this.newMessageText,
+            name: this.user.displayName,
+            email: this.user.email,
+            image: this.user.photoURL
+        }
+
+        firebase.database().ref('/messages').push(newMessage)
+            .then(() => {
+                this.newMessageText = ''
+                this.render()
+            })
     }
 
     render() {
@@ -41,16 +58,15 @@ class Chat {
         // display input and button for new messages
         this.makeMessageBox()
 
-        // adding new messages from this.message class field
+        // adding new messages from this.messages class field
         this.messages.forEach(message => this.makeMessage(message))
 
         // adding margin to last message
         const lastMessage = document.querySelector('.message-container:last-of-type')
         if (lastMessage) lastMessage.style.marginBottom = '79px'
 
-        // displaying login form when not logged in
-        if(!this.user) this.makeLoginBox()
-
+        // displaing login form when not logged in
+        if (!this.user) this.makeLoginBox()
     }
 
     makeMessage(message) {
@@ -62,20 +78,11 @@ class Chat {
         const todayDate = document.createElement('div')
         const image = document.createElement('img')
 
-        // add CSS
-        image.style.cssText = `
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        `
-        todayDate.style.cssText = `
-            float: left;
-            align-self: center;
-
-        `
+        // add classes
         messageContainer.className = 'message-container'
         textContainer.className = 'text-container'
         todayDate.className = 'todayDate'
+        image.className = 'profile-image'
 
         // add atributes and texts
         image.setAttribute('src', message.image || `https://api.adorable.io/avatars/100/${message.email}`)
@@ -100,14 +107,7 @@ class Chat {
         const button = document.createElement('button')
         const inputGroupForButton = document.createElement('div')
 
-        // add CSS and CSS
-        container.style.cssText = `
-            position: fixed;
-            bottom: 0;
-            padding: 20px;
-            border-top: 1px solid rgba(0, 0, 0, .125)
-            background-color: #fff;
-        `
+        // add classes
         container.className = 'input-group'
         input.className = 'form-control'
         button.className = 'btn btn-success'
@@ -118,13 +118,9 @@ class Chat {
         button.innerText = 'Send message'
 
         let thisDate = new Date();
-        let month = thisDate.getMonth();
-
         let thisDay = thisDate.getDate();
 
-
         const options = { month: 'short' };
-
 
         // event listeners
         input.addEventListener(
@@ -154,9 +150,6 @@ class Chat {
             }
         )
 
-
-
-
         // put it all together
         inputGroupForButton.appendChild(button)
         container.appendChild(input)
@@ -170,26 +163,8 @@ class Chat {
         const button = document.createElement('button')
         const header = document.createElement('h1')
 
-        // add CSS and CSS classes
-        container.style.cssText = `
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #fff;
-            z-index: 99;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        `
-        header.style.cssText = `
-            text-align: center;
-            margin: 20px;
-            text-decoration: none;
-            color: black;
-        `
+        // add css classes
+        container.className = 'login-box'
         header.className = 'title'
         button.className = 'btn btn-danger'
 
@@ -207,16 +182,10 @@ class Chat {
         container.appendChild(header)
         container.appendChild(button)
         this.chatContainer.appendChild(container)
-
-
-
     }
-
-
-
-
-
 }
 
 new Chat()
+
+
 
