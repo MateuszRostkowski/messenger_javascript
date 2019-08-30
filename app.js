@@ -66,7 +66,9 @@ class Chat {
         if (lastMessage) lastMessage.style.marginBottom = '79px'
 
         // displaing login form when not logged in
-        if (!this.user) this.makeLoginBox()
+        if (!this.user) {            
+            this.makeLoginBox()
+        }
     }
 
     makeMessage(message) {
@@ -98,6 +100,31 @@ class Chat {
         messageContainer.appendChild(todayDate)
         this.chatContainer.appendChild(messageContainer)
 
+        if (!this.user) {            
+            messageContainer.className = 'display-none'
+        }
+
+    }
+
+    sendMessage(){
+        let thisDate = new Date();
+        let thisDay = thisDate.getDate();
+
+        const options = { month: 'short' };
+        firebase.database().ref('/messages')
+        .push({
+            text: this.newMessageText,
+            name: this.user.displayName,
+            email: this.user.email,
+            image: this.user.photoURL,
+            today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
+        })
+
+    this.newMessageText = ''
+
+    this.render()
+
+    window.scrollTo(0, document.body.scrollHeight);
     }
 
     makeMessageBox() {
@@ -117,10 +144,7 @@ class Chat {
         input.setAttribute('placeholder', 'Message text')
         button.innerText = 'Send message'
 
-        let thisDate = new Date();
-        let thisDay = thisDate.getDate();
-
-        const options = { month: 'short' };
+        
 
         // event listeners
         input.addEventListener(
@@ -130,23 +154,19 @@ class Chat {
             }
         )
 
+        input.addEventListener(
+            "keydown", 
+            (e) => {
+                if (e.keyCode === 13) {
+                    this.sendMessage();
+                }
+            }
+        )
+
         button.addEventListener(
             `click`,
             () => {
-                firebase.database().ref('/messages')
-                    .push({
-                        text: this.newMessageText,
-                        name: this.user.displayName,
-                        email: this.user.email,
-                        image: this.user.photoURL,
-                        today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
-                    })
-
-                this.newMessageText = ''
-
-                this.render()
-
-                window.scrollTo(0, document.body.scrollHeight);
+                this.sendMessage();
             }
         )
 
@@ -175,7 +195,7 @@ class Chat {
         // add event listeners
         button.addEventListener(
             'click',
-            () => this.logInByGoogleHandler()
+            () => this.onLoginByGoogleClickHandler()
         )
 
         // put it all together
