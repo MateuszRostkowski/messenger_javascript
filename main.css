@@ -28,6 +28,46 @@ html {
 .todayDate {
     align-self: center;
     justify-self: end;
+    position: relative;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.todayDate .tooltiptext {
+  visibility: hidden;
+  width: 60px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -30px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.todayDate .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.todayDate:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 
 .profile-image {
@@ -42,6 +82,7 @@ html {
     padding: 20px;
     background: white;
     border-top: 1px solid rgba(0, 0, 0, 0.125);
+    z-index: 5;
 }
 
 .login-box {
@@ -98,4 +139,18 @@ html {
     .btn {
         font-size: 13px;
     }
+}
+
+@media (max-width: 550px) {
+    .message-container {
+        grid-template-columns: 75px 1fr 60px;
+
+    }
+
+    .profile-image {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+    }
+
 }

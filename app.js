@@ -79,8 +79,10 @@ class Chat {
         const messageTextContainer = document.createElement('div')
         const todayDate = document.createElement('div')
         const image = document.createElement('img')
+        const tooltip = document.createElement('span')
 
         // add classes
+        tooltip.className = 'tooltiptext'
         messageContainer.className = 'message-container'
         textContainer.className = 'text-container'
         todayDate.className = 'todayDate'
@@ -91,10 +93,12 @@ class Chat {
         nameContainer.innerText = message.name
         messageTextContainer.innerText = message.text
         todayDate.innerText = message.today
+        tooltip.innerText = message.tooltip
 
         // put it all together
         textContainer.appendChild(nameContainer)
         textContainer.appendChild(messageTextContainer)
+        todayDate.appendChild(tooltip)
         messageContainer.appendChild(image)
         messageContainer.appendChild(textContainer)
         messageContainer.appendChild(todayDate)
@@ -105,6 +109,13 @@ class Chat {
         }
 
     }
+
+    addZero(i) {
+        if (i < 10) {
+          i = "0" + i;
+        }
+        return i;
+      }
 
     sendMessage(){
         let thisDate = new Date();
@@ -117,7 +128,8 @@ class Chat {
             name: this.user.displayName,
             email: this.user.email,
             image: this.user.photoURL,
-            today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
+            tooltip: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate),
+            today: this.addZero(thisDate.getHours()) + ":" + this.addZero(thisDate.getMinutes())
         })
 
     this.newMessageText = ''
