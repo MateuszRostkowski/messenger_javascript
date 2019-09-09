@@ -64,6 +64,17 @@ class Chat {
         // adding margin to last message
         const lastMessage = document.querySelector('.message-container:last-of-type')
         if (lastMessage) lastMessage.style.marginBottom = '79px'
+        
+        // displaying user messages on left
+        // let userEmail = this.user.email
+        // console.log(this.user.email)
+        // console.log("hello " + userEmail)
+        console.log(this.user)
+        const userMessages = document.querySelectorAll("[title=" + CSS.escape(this.user.email) + "]");
+        for (let i = 0; i < userMessages.length; ++i) {
+            userMessages[i].style.marginLeft = "65px";
+            userMessages[i].style.marginRight = "15px";
+        }
 
         // displaing login form when not logged in
         if (!this.user) {            
@@ -79,15 +90,18 @@ class Chat {
         const messageTextContainer = document.createElement('div')
         const todayDate = document.createElement('div')
         const image = document.createElement('img')
+        const tooltip = document.createElement('span')
 
         // add classes
         messageContainer.className = 'message-container'
+        tooltip.className = 'tooltiptext'
         textContainer.className = 'text-container'
         todayDate.className = 'todayDate'
         image.className = 'profile-image'
 
         // add atributes and texts
         image.setAttribute('src', message.image || `https://api.adorable.io/avatars/100/${message.email}`)
+        messageContainer.setAttribute('title', message.messageTitle)
         nameContainer.innerText = message.name
         messageTextContainer.innerText = message.text
         todayDate.innerText = message.today
@@ -106,6 +120,13 @@ class Chat {
 
     }
 
+    addZero(i) {
+        if (i < 10) {
+          i = "0" + i;
+        }
+        return i;
+      }
+
     sendMessage(){
         let thisDate = new Date();
         let thisDay = thisDate.getDate();
@@ -117,14 +138,16 @@ class Chat {
             name: this.user.displayName,
             email: this.user.email,
             image: this.user.photoURL,
-            today: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate)
+            today: this.addZero(thisDate.getHours()) + ":" + this.addZero(thisDate.getMinutes()),
+            tooltip: thisDay + " " + new Intl.DateTimeFormat('en-US', options).format(thisDate),
+            messageTitle: this.user.email
         })
 
-    this.newMessageText = ''
+        this.newMessageText = ''
 
-    this.render()
+        this.render()
 
-    window.scrollTo(0, document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
     }
 
     makeMessageBox() {
