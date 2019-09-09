@@ -192,10 +192,31 @@ html {
         border-radius: 50%;
     }
 }
-@media (max-width: 320px) {
+@media (max-width: 350px) {
+    .text-container {
+        max-width: 50px;
+    }
+
     .text-container {
         margin: 5px;
     }
+
+    .text-container h5 {
+        font-size: 12px;
+    }
+
+    .message-container div {
+        font-size: 7px;
+    }
+
+    .form-control {
+        font-size: 7px;
+    }
+
+    .btn {
+        font-size: 9px;
+    }
+    
     
 }
 

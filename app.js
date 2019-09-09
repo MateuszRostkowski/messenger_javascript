@@ -63,13 +63,9 @@ class Chat {
 
         // adding margin to last message
         const lastMessage = document.querySelector('.message-container:last-of-type')
-        if (lastMessage) lastMessage.style.marginBottom = '79px'
+        if (lastMessage) lastMessage.style.marginBottom = '85px'
         
         // displaying user messages on left
-        // let userEmail = this.user.email
-        // console.log(this.user.email)
-        // console.log("hello " + userEmail)
-        console.log(this.user)
         const userMessages = document.querySelectorAll("[title=" + CSS.escape(this.user.email) + "]");
         for (let i = 0; i < userMessages.length; ++i) {
             userMessages[i].style.marginLeft = "65px";
@@ -105,10 +101,12 @@ class Chat {
         nameContainer.innerText = message.name
         messageTextContainer.innerText = message.text
         todayDate.innerText = message.today
+        tooltip.innerText = message.tooltip
 
         // put it all together
         textContainer.appendChild(nameContainer)
         textContainer.appendChild(messageTextContainer)
+        todayDate.appendChild(tooltip)
         messageContainer.appendChild(image)
         messageContainer.appendChild(textContainer)
         messageContainer.appendChild(todayDate)
