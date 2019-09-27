@@ -1,5 +1,5 @@
 class Chat {
-
+    
     constructor(selector) {
         this.chatContainer = document.querySelector('selector') || document.body
         this.user = null
@@ -16,6 +16,33 @@ class Chat {
             this.user = user
             this.render()
         })
+    }
+    
+    render() {
+        // removing all items
+        this.chatContainer.innerHTML = ''
+
+        // display input and button for new messages
+        this.makeMessageBox()
+
+        // adding new messages from this.messages class field
+        this.messages.forEach(message => this.makeMessage(message))
+
+        // adding margin to last message
+        const lastMessage = document.querySelector('.message-container:last-of-type')
+        if (lastMessage) lastMessage.style.marginBottom = '85px';
+
+        // displaing login form when not logged in
+        if (this.user == null) {            
+            this.makeLoginBox()
+        }
+
+        // displaying user messages on left
+        const userMessages = document.querySelectorAll("[title=" + CSS.escape(this.user.email) + "]");
+        for (let i = 0; i < userMessages.length; ++i) {
+            userMessages[i].style.marginLeft = "65px";
+            userMessages[i].style.marginRight = "15px";
+        }
     }
 
     startListeningForMessages() {
@@ -51,32 +78,7 @@ class Chat {
             })
     }
 
-    render() {
-        // removing all items
-        this.chatContainer.innerHTML = ''
-
-        // display input and button for new messages
-        this.makeMessageBox()
-
-        // adding new messages from this.messages class field
-        this.messages.forEach(message => this.makeMessage(message))
-
-        // adding margin to last message
-        const lastMessage = document.querySelector('.message-container:last-of-type')
-        if (lastMessage) lastMessage.style.marginBottom = '85px'
-        
-        // displaying user messages on left
-        const userMessages = document.querySelectorAll("[title=" + CSS.escape(this.user.email) + "]");
-        for (let i = 0; i < userMessages.length; ++i) {
-            userMessages[i].style.marginLeft = "65px";
-            userMessages[i].style.marginRight = "15px";
-        }
-
-        // displaing login form when not logged in
-        if (!this.user) {            
-            this.makeLoginBox()
-        }
-    }
+    
 
     makeMessage(message) {
         // create elements
@@ -204,6 +206,7 @@ class Chat {
         const button = document.createElement('button')
         const header = document.createElement('h1')
 
+        
         // add css classes
         container.className = 'login-box'
         header.className = 'title'
@@ -218,7 +221,6 @@ class Chat {
             'click',
             () => this.onLoginByGoogleClickHandler()
         )
-
         // put it all together
         container.appendChild(header)
         container.appendChild(button)
