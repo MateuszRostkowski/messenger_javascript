@@ -18,6 +18,7 @@ class Chat {
         })
     }
     
+    
     render() {
         // removing all items
         this.chatContainer.innerHTML = ''
@@ -37,12 +38,18 @@ class Chat {
             this.makeLoginBox()
         }
 
+
         // displaying user messages on left
         const userMessages = document.querySelectorAll("[title=" + CSS.escape(this.user.email) + "]");
         for (let i = 0; i < userMessages.length; ++i) {
-            userMessages[i].style.marginLeft = "65px";
-            userMessages[i].style.marginRight = "15px";
+            userMessages[i].className += " user-message";
         }
+
+        // const userMessages = document.querySelectorAll("[title=" + CSS.escape(this.user.email) + "]");
+        // for (let i = 0; i < userMessages.length; ++i) {
+        //     userMessages[i].style.marginLeft = "65px";
+        //     userMessages[i].style.marginRight = "15px";
+        // }
     }
 
     startListeningForMessages() {
