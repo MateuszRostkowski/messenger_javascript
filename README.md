@@ -1,3 +1,3 @@
 # messenger_javascript
 
-[Live Demo](http://livechat-by-me.surge.sh/)
+[Live Demo](http://jsmessenger.surge.sh/)
